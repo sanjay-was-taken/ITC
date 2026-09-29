@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f3ee">
+  <title>Signal Lab | Coding & Transmission</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Signal Lab home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span>SIGNAL<span class="brand-light">LAB</span></span>
+      </a>
+      <div class="topbar-meta">
+        <span class="live-indicator"><i></i> LOCAL SIMULATOR</span>
+        <span class="course-label">INFORMATION THEORY <b>/</b> SEM 05</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro-row">
+        <div class="intro-copy">
+          <p class="eyebrow">END-TO-END TRANSMISSION SYSTEM <span>01 — 06</span></p>
+          <h1>From source<br><em>to signal.</em></h1>
+          <p class="intro-description">Compress a message, protect it with Hamming code, then watch the receiver recover it from a noisy channel.</p>
+        </div>
+        <div class="intro-stamp" aria-label="Six stage transmission pipeline">
+          <span class="stamp-orbit">SOURCE → CHANNEL → RECEIVER</span>
+          <strong>H(7,4)</strong>
+          <span class="stamp-caption">ERROR CONTROL<br>CODING</span>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Transmission simulator">
+        <aside class="control-panel">
+          <div class="panel-heading"><span class="step-tag">CONTROL</span><span class="panel-status"><i></i> READY</span></div>
+          <label class="field-label" for="source-text">SOURCE MESSAGE <span id="character-count">4 / 10,000</span></label>
+          <textarea id="source-text" maxlength="10000" spellcheck="false" aria-describedby="source-hint">DATA</textarea>
+          <div class="input-actions">
+            <button class="text-button" id="load-example" type="button">LOAD EXAMPLE <span aria-hidden="true">↗</span></button>
+            <label class="text-button file-button" for="file-input">OPEN .TXT <span aria-hidden="true">↗</span></label>
+            <input id="file-input" type="file" accept=".txt,text/plain" hidden>
+          </div>
+          <p class="field-hint" id="source-hint">8-bit ASCII input · up to 10,000 characters</p>
+
+          <div class="control-divider"></div>
+          <div class="channel-heading"><div><span class="eyebrow">CHANNEL MODEL</span><h2>Noise & interference</h2></div><span class="signal-icon" aria-hidden="true">⌁</span></div>
+          <div class="range-line"><label class="field-label" for="noise-rate">BIT ERROR RATE</label><output id="noise-output" for="noise-rate">0.0%</output></div>
+          <input id="noise-rate" class="range-input" type="range" min="0" max="10" step="0.5" value="0">
+          <div class="range-scale"><span>0% CLEAN</span><span>10% SEVERE</span></div>
+          <div class="fault-control">
+            <div><strong>Teaching fault</strong><span>Flip one known bit to inspect correction</span></div>
+            <label class="switch"><input id="fault-toggle" type="checkbox" checked><span class="switch-track"></span><span class="sr-only">Toggle teaching fault</span></label>
+          </div>
+          <div class="fault-position" id="fault-position-wrap">
+            <label class="field-label" for="fault-bit">BIT TO FLIP <span>1-BASED POSITION</span></label>
+            <input id="fault-bit" type="number" min="1" value="6" inputmode="numeric">
+          </div>
+          <button class="run-button" id="run-simulation" type="button"><span class="run-symbol" aria-hidden="true">▶</span> TRANSMIT MESSAGE <span class="run-arrow" aria-hidden="true">↗</span></button>
+          <p class="run-note">Each run builds a fresh codebook from your message.</p>
+        </aside>
+
+        <div class="results-panel">
+          <section class="metrics-strip" aria-label="Information theory metrics">
+            <article class="metric"><span class="metric-label">SHANNON ENTROPY <i>H(X)</i></span><strong id="metric-entropy">1.5000</strong><span class="metric-unit">bits / symbol</span></article>
+            <article class="metric"><span class="metric-label">AVG. CODE LENGTH <i>L</i></span><strong id="metric-length">1.5000</strong><span class="metric-unit">bits / symbol</span></article>
+            <article class="metric"><span class="metric-label">EFFICIENCY <i>η</i></span><strong id="metric-efficiency">100<span>%</span></strong><span class="metric-unit">H(X) / L</span></article>
+            <article class="metric metric-highlight"><span class="metric-label">SOURCE REDUCTION</span><strong id="metric-reduction">81.25<span>%</span></strong><span class="metric-unit" id="metric-size">32 → 6 bits</span></article>
+          </section>
+
+          <section class="pipeline-section">
+            <div class="section-title-row"><div><span class="eyebrow">LIVE TRACE <span id="trace-id">RUN 001</span></span><h2>Transmission pipeline</h2></div><span class="stream-count" id="stream-size">14 BITS ON CHANNEL</span></div>
+            <nav class="stage-stepper" id="stage-stepper" aria-label="Transmission stages">
+              <button class="step-button is-active" type="button" data-stage="0"><span>01</span>ASCII</button>
+              <button class="step-button" type="button" data-stage="1"><span>02</span>HUFFMAN</button>
+              <button class="step-button" type="button" data-stage="2"><span>03</span>HAMMING</button>
+              <button class="step-button" type="button" data-stage="3"><span>04</span>CHANNEL</button>
+              <button class="step-button" type="button" data-stage="4"><span>05</span>SYNDROME</button>
+              <button class="step-button" type="button" data-stage="5"><span>06</span>OUTPUT</button>
+            </nav>
+            <section class="stage-view" id="stage-view" aria-live="polite"></section>
+            <div class="step-navigation">
+              <button id="previous-stage" type="button" aria-label="Previous stage">← PREVIOUS</button>
+              <span id="stage-position">STAGE 01 / 06</span>
+              <button id="next-stage" type="button" aria-label="Next stage">NEXT →</button>
+            </div>
+          </section>
+
+          <footer class="page-footer"><span>INFORMATION THEORY & DIGITAL COMMUNICATIONS</span><span>HUFFMAN SOURCE CODING <b>·</b> HAMMING CHANNEL CODING</span></footer>
+        </div>
+      </section>
+      <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+    </main>
+  </div>
+</body>
+</html>
